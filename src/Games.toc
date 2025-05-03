@@ -1,0 +1,14 @@
+## Interface: 110100
+## Title: Games
+## Version: 1.0.0
+## Author: Nick Stuer
+## IconTexture: Interface\AddOns\Games\Media\Icon.tga
+
+## SavedVariables: GamesDB
+
+## Category-enUS: Games
+
+Core\Config.lua
+Core\Utils.lua
+
+Main.lua

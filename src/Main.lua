@@ -43,7 +43,7 @@ FR.OpenGameLauncher = function()
 		edgeSize = 16,
 		insets = { left = 4, right = 4, top = 4, bottom = 4 }
 	})
-	GameLauncher:SetSize(300, 240)
+	GameLauncher:SetSize(300, 280)
 	GameLauncher:SetPoint("CENTER")
 	GameLauncher:SetMovable(true)
 	GameLauncher:EnableMouse(true)
@@ -99,25 +99,39 @@ FR.OpenGameLauncher = function()
 		return btn
 	end
 	
+	local y = -60
+	local yOffset = 40
+
 	-- Tic Tac Toe Launcher Button
-	CreateGameButton(GameLauncher, "Play Tic Tac Toe", -60, function()
+	CreateGameButton(GameLauncher, "Play Tic Tac Toe", y, function()
 		GameLauncher:Hide()
 		FR.TTT:Load()
 	end)
+	y = y - yOffset
 	
 	-- Guess the Number Launcher Button
-	CreateGameButton(GameLauncher, "Play Guess the Number", -100, function()
+	CreateGameButton(GameLauncher, "Play Guess the Number", y, function()
 		GameLauncher:Hide()
 		FR.GTN:Load()
 	end)
+	y = y - yOffset
+
+	-- Rock Paper Scissors Launcher Button
+	CreateGameButton(GameLauncher, "Play Rock Paper Scissors", y, function()
+		GameLauncher:Hide()
+		FR.RPS:Load()
+	end)
+	y = y - yOffset
 
 	-- Coming Soon Placeholder Button
-	local comingSoon = CreateGameButton(GameLauncher, "Coming Soon...", -140, function() end)
+	local comingSoon = CreateGameButton(GameLauncher, "Coming Soon...", y, function() end)
 	comingSoon:Disable()
+	y = y - yOffset
 
 	-- Coming Soon Placeholder Button
-	local comingSoon2 = CreateGameButton(GameLauncher, "Coming Soon 2...", -180, function() end)
+	local comingSoon2 = CreateGameButton(GameLauncher, "Coming Soon 2...", y, function() end)
 	comingSoon2:Disable()
+	y = y - yOffset
 	
 	GameLauncher:Show()
 end

@@ -152,8 +152,8 @@ function TTT:BuildWindow()
     TicTacToe:SetBackdropBorderColor(0.35, 0.3, 0.6, 1)
   
     TicTacToe.title = TicTacToe:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-    TicTacToe.title:SetPoint("TOP", 0, -10)
-    TicTacToe.title:SetText("Games by Plunger | Tic Tac Toe")
+    TicTacToe.title:SetPoint("TOP", 0, -5)
+    TicTacToe.title:SetText("Tic Tac Toe | Games by Plunger")
 
     --TicTacToe:Show()
 

@@ -32,8 +32,8 @@ function GTN:Load()
 
     -- Title text
     local guessTitle = guessTitleBg:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-    guessTitle:SetPoint("TOP", 0, -10)
-    guessTitle:SetText("Games by Plunger | Guess the Number")
+    guessTitle:SetPoint("TOP", 0, -5)
+    guessTitle:SetText("Guess the Number | Games by Plunger")
 
     -- Close button
     local guessClose = CreateFrame("Button", nil, GuessFrame, "UIPanelCloseButton")
@@ -41,7 +41,6 @@ function GTN:Load()
     guessClose:SetScript("OnClick", function()
         GuessFrame:Hide()
     end)
-
 
     local resultText = GuessFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
     resultText:SetPoint("TOP", 0, -40)

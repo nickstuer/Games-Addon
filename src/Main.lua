@@ -4,25 +4,50 @@ local Utils = FR.Utils or {}
 FR.Utils = Utils
 
 FR.version = C_AddOns.GetAddOnMetadata("Games", "Version") or "Unknown"
+local ADDON_PREFIX = "GamesPing"
+FR.detectedUsers = {}
 
 -- Initialize the addon
 local initFrame = CreateFrame("Frame")
 initFrame:RegisterEvent("ADDON_LOADED")
 initFrame:RegisterEvent("PLAYER_LOGIN")
 initFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+initFrame:RegisterEvent("CHAT_MSG_ADDON")
 
-initFrame:SetScript("OnEvent", function(self, event, arg1)
-    if event == "ADDON_LOADED" and arg1 == addonName then
-		self:UnregisterEvent("ADDON_LOADED")
-	end
+initFrame:SetScript("OnEvent", function(self, event, ...)
+    --if event == "ADDON_LOADED" and arg1 == addonName then
+	--	self:UnregisterEvent("ADDON_LOADED")
+	--end
 
 	if event == "PLAYER_LOGIN" then
+		C_ChatInfo.RegisterAddonMessagePrefix(ADDON_PREFIX)
+		C_ChatInfo.SendAddonMessage(ADDON_PREFIX, "ping", "RAID")
 		self:UnregisterEvent("PLAYER_LOGIN")
 	end
 
 	if event == "PLAYER_ENTERING_WORLD" then
 		Utils.Print("Addon Loaded.")
 		self:UnregisterEvent("PLAYER_ENTERING_WORLD")
+	end
+
+	if event == "CHAT_MSG_ADDON" then
+		local prefix, message, channel, sender = ...
+
+		if prefix ~= ADDON_PREFIX then return end
+		if sender == Utils.GetFullPlayerName() then return end
+
+		Utils.Print("Received addon message: " .. message .. " from " .. sender)
+
+		if message == "ping" then
+			-- Respond to ping
+			C_ChatInfo.SendAddonMessage(ADDON_PREFIX, "pong", channel)
+		elseif message == "pong" then
+			-- Record other addon user
+			if not FR.detectedUsers[sender] then
+				Utils.Print("Detected addon user: " .. sender)
+				FR.detectedUsers[sender] = true
+			end
+		end
 	end
 
 end)
@@ -34,7 +59,15 @@ SlashCmdList["GAMES"] = function()
 	FR.OpenGameLauncher()
 end
 
-
+FR.DetectOtherPlayers = function()
+	local playerCount = 0
+	for i = 1, GetNumGroupMembers() do
+		if UnitIsPlayer("party" .. i) then
+			playerCount = playerCount + 1
+		end
+	end
+	return playerCount
+end
 FR.OpenGameLauncher = function()
 	local GameLauncher = CreateFrame("Frame", "GameLauncherFrame", UIParent, "BackdropTemplate")
 	GameLauncher:SetBackdrop({

@@ -12,4 +12,10 @@ function Utils.Print(...)
 	print("|cff33ff99" .. addonName .. "|r: ", ...);
 end
 
+function Utils.GetFullPlayerName()
+    local name, realm = UnitName("player")
+    realm = realm or GetRealmName()
+    return name .. "-" .. realm:gsub("%s+", "")
+end
+
 return Utils

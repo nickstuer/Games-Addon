@@ -217,10 +217,93 @@ function TTT:BuildWindow()
 end
 
 
+function TTT:BuildSelectionWindow()
+	local selectionWindow = CreateFrame("Frame", "SelectionWindowFrame", UIParent, "BackdropTemplate")
+	selectionWindow:SetBackdrop({
+		bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+		edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+		edgeSize = 16,
+		insets = { left = 4, right = 4, top = 4, bottom = 4 }
+	})
+	selectionWindow:SetSize(300, 280)
+	selectionWindow:SetPoint("CENTER")
+	selectionWindow:SetMovable(true)
+	selectionWindow:EnableMouse(true)
+	selectionWindow:RegisterForDrag("LeftButton")
+	selectionWindow:SetScript("OnDragStart", selectionWindow.StartMoving)
+	selectionWindow:SetScript("OnDragStop", selectionWindow.StopMovingOrSizing)
+	selectionWindow:SetBackdropColor(0.2, 0.1, 0.3, 0.9)
+	selectionWindow:SetBackdropBorderColor(0.5, 0.3, 0.8, 1)
+
+	-- Add X button
+	local closeButton = CreateFrame("Button", nil, selectionWindow, "UIPanelCloseButton")
+	closeButton:SetPoint("TOPRIGHT", selectionWindow, "TOPRIGHT", -5, -5)
+	closeButton:SetScript("OnClick", function()
+		selectionWindow:Hide()
+	end)
+	
+	-- Title background frame
+	local titleBg = CreateFrame("Frame", nil, selectionWindow)
+	titleBg:SetSize(1, 24)
+	titleBg:SetPoint("TOPLEFT", selectionWindow, "TOPLEFT", 4, -4)
+	titleBg:SetPoint("TOPRIGHT", selectionWindow, "TOPRIGHT", -24, -4)
+
+	selectionWindow.title = titleBg:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+	selectionWindow.title:SetPoint("TOP", 0, -10)
+	selectionWindow.title:SetText("Games by Plunger | v" .. FR.version)
+		
+	local function CreateGameButton(parent, label, yOffset, onClick)
+		local btn = CreateFrame("Button", nil, parent, "BackdropTemplate")
+		btn:SetBackdrop({
+			bgFile = "Interface/Buttons/WHITE8x8",
+			edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+			edgeSize = 10,
+			insets = { left = 2, right = 2, top = 2, bottom = 2 }
+		})
+		btn:SetSize(200, 32)
+		btn:SetPoint("TOP", parent, "TOP", 0, yOffset)
+		btn:SetText(label)
+		btn:SetScript("OnClick", onClick)
+	
+		-- Purple styling
+		btn:SetNormalFontObject("GameFontNormal")
+		btn:SetHighlightFontObject("GameFontHighlight")
+		btn:SetBackdropColor(0.22, 0.18, 0.35, 0.9)
+		btn:SetBackdropBorderColor(0.35, 0.3, 0.5, 1)
+	
+		btn:SetScript("OnEnter", function(self)
+			self:SetBackdropColor(0.35, 0.3, 0.5, 1)
+		end)
+		btn:SetScript("OnLeave", function(self)
+			self:SetBackdropColor(0.22, 0.18, 0.35, 0.9)
+		end)
+	
+		return btn
+	end
+
+	local y = -60
+	local yOffset = 40
+
+	CreateGameButton(selectionWindow, "Play Against AI", y, function()
+		selectionWindow:Hide()
+		self:BuildWindow()
+	end)
+	y = y - yOffset
+	
+	CreateGameButton(selectionWindow, "Play Against Human", y, function()
+		selectionWindow:Hide()
+		--FR.GTN:Load()
+	end)
+	y = y - yOffset
+
+
+end
+
+
 function TTT:Load()
     board = {}
     turn = "X"
     buttons = {}
     turnText = nil
-	TTT:BuildWindow()
+	TTT:BuildSelectionWindow()
 end

@@ -36,7 +36,7 @@ initFrame:SetScript("OnEvent", function(self, event, ...)
 		if prefix ~= ADDON_PREFIX then return end
 		if sender == Utils.GetFullPlayerName() then return end
 
-		Utils.Print("Received addon message: " .. message .. " from " .. sender)
+		Utils.Debug("Received addon message: " .. message .. " from " .. sender)
 
 		if message == "ping" then
 			-- Respond to ping
@@ -68,6 +68,7 @@ FR.DetectOtherPlayers = function()
 	end
 	return playerCount
 end
+
 FR.OpenGameLauncher = function()
 	local GameLauncher = CreateFrame("Frame", "GameLauncherFrame", UIParent, "BackdropTemplate")
 	GameLauncher:SetBackdrop({

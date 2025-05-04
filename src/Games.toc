@@ -2,7 +2,7 @@
 ## Title: Games
 ## Version: 1.0.0
 ## Author: Nick Stuer
-## IconTexture: Interface\AddOns\Games\Media\Icon.tga
+## IconTexture: Interface\AddOns\Games\Icons\Icon.tga
 
 ## SavedVariables: GamesDB
 
@@ -10,5 +10,7 @@
 
 Core\Config.lua
 Core\Utils.lua
+Games\TicTacToe.lua
+Games\GuessTheNumber.lua
 
 Main.lua

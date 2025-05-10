@@ -10,6 +10,7 @@
 
 Core\Config.lua
 Core\Utils.lua
+Core\ChallengeUI.lua
 Games\TicTacToe.lua
 Games\GuessTheNumber.lua
 Games\RockPaperScissors.lua

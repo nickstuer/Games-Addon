@@ -1,79 +1,14 @@
-local addonName, FR = ...;
-
-local Utils = FR.Utils or {}
-FR.Utils = Utils
+local _, FR = ...
 
 local Challenge = FR.Challenge or {}
 FR.Challenge = Challenge
 
-FR.version = C_AddOns.GetAddOnMetadata("Games", "Version") or "Unknown"
-local ADDON_PREFIX = "GamesPing"
-FR.detectedUsers = {}
+local secret = nil
 
--- Initialize the addon
-local initFrame = CreateFrame("Frame")
-initFrame:RegisterEvent("ADDON_LOADED")
-initFrame:RegisterEvent("PLAYER_LOGIN")
-initFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-initFrame:RegisterEvent("CHAT_MSG_ADDON")
+local Utils = FR.Utils or {}
+FR.Utils = Utils
 
-initFrame:SetScript("OnEvent", function(self, event, ...)
-    --if event == "ADDON_LOADED" and arg1 == addonName then
-	--	self:UnregisterEvent("ADDON_LOADED")
-	--end
-
-	if event == "PLAYER_LOGIN" then
-		C_ChatInfo.RegisterAddonMessagePrefix(ADDON_PREFIX)
-		C_ChatInfo.SendAddonMessage(ADDON_PREFIX, "ping", "RAID")
-		self:UnregisterEvent("PLAYER_LOGIN")
-	end
-
-	if event == "PLAYER_ENTERING_WORLD" then
-		Utils.Print("Addon Loaded.")
-		self:UnregisterEvent("PLAYER_ENTERING_WORLD")
-	end
-
-	if event == "CHAT_MSG_ADDON" then
-		local prefix, message, channel, sender = ...
-
-		if prefix ~= ADDON_PREFIX then return end
-		if sender == Utils.GetFullPlayerName() then return end
-
-		Utils.Debug("Received addon message: " .. message .. " from " .. sender)
-
-		if message == "ping" then
-			-- Respond to ping
-			C_ChatInfo.SendAddonMessage(ADDON_PREFIX, "pong", channel)
-		elseif message == "pong" then
-			-- Record other addon user
-			if not FR.detectedUsers[sender] then
-				Utils.Print("Detected addon user: " .. sender)
-				FR.detectedUsers[sender] = true
-			end
-		end
-	end
-
-end)
-
--- Slash Commands
-SLASH_GAMES1 = "/games"
-SlashCmdList["GAMES"] = function()
-    Utils.Debug("Version: " .. FR.version)
-	--FR.OpenGameLauncher()
-	Challenge.ChallengeWindow()
-end
-
-FR.DetectOtherPlayers = function()
-	local playerCount = 0
-	for i = 1, GetNumGroupMembers() do
-		if UnitIsPlayer("party" .. i) then
-			playerCount = playerCount + 1
-		end
-	end
-	return playerCount
-end
-
-FR.OpenGameLauncher = function()
+Challenge.ChallengeWindow = function()
 	local GameLauncher = CreateFrame("Frame", "GameLauncherFrame", UIParent, "BackdropTemplate")
 	GameLauncher:SetBackdrop({
 		bgFile = "Interface/Tooltips/UI-Tooltip-Background",
@@ -140,7 +75,51 @@ FR.OpenGameLauncher = function()
 	local y = -60
 	local yOffset = 40
 
-	-- Tic Tac Toe Launcher Button
+    -- Separator line
+    local sep1 = GameLauncher:CreateTexture(nil, "ARTWORK")
+    sep1:SetColorTexture(1, 1, 1, 0.2)
+    sep1:SetSize(280, 1)
+    sep1:SetPoint("TOPLEFT", 10, y)
+    y = y - 10
+
+    local label1 = GameLauncher:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    label1:SetPoint("TOPLEFT", 10, y)
+    label1:SetText("Computer")
+    y = y - 25
+
+    -- Difficulty options
+    local options = {"Easy"}
+    for i, text in ipairs(options) do
+        local optionLabel = GameLauncher:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+        optionLabel:SetPoint("TOPLEFT", 10, y)
+        optionLabel:SetText(text)
+        y = y - 30
+    end
+
+
+    -- Separator line
+    local sep1 = GameLauncher:CreateTexture(nil, "ARTWORK")
+    sep1:SetColorTexture(1, 1, 1, 0.2)
+    sep1:SetSize(280, 1)
+    sep1:SetPoint("TOPLEFT", 10, y)
+    y = y - 10
+
+    local label1 = GameLauncher:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    label1:SetPoint("TOPLEFT", 10, y)
+    label1:SetText("Guild")
+    y = y - 25
+
+    -- Difficulty options
+    local options2 = {"Placeholder-Kel-Thuzad", "Placeholder2-Kel-Thuzad", "Placeholder3-Kel-Thuzad"}
+    for i, text in ipairs(options2) do
+        local optionLabel = GameLauncher:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+        optionLabel:SetPoint("TOPLEFT", 10, y)
+        optionLabel:SetText(text)
+        y = y - 30
+    end
+
+
+    -- Tic Tac Toe Launcher Button
 	CreateGameButton(GameLauncher, "Play Tic Tac Toe", y, function()
 		GameLauncher:Hide()
 		FR.TTT:Load()
